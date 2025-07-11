@@ -1,13 +1,9 @@
 from flask import Flask, request, jsonify
 import numpy as np
-try:
-    import tflite_runtime.interpreter as tflite
-except ImportError:
-    import tensorflow as tf
-    tflite = tf.lite
+import tensorflow as tf
 
 app = Flask(__name__)
-
+tflite = tf.lite
 # Load TFLite model
 interpreter = tf.lite.Interpreter(model_path="tflite-model/tflite_learn_4.tflite")
 interpreter.allocate_tensors()
