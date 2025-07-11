@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
 import numpy as np
-import tensorflow as tf
+try:
+    import tflite_runtime.interpreter as tflite
+except ImportError:
+    import tensorflow as tf
+    tflite = tf.lite
 
 app = Flask(__name__)
 
