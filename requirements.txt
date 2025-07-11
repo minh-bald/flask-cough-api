@@ -1,0 +1,5 @@
+flask
+tflite-runtime
+librosa
+numpy
+soundfile
