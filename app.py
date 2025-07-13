@@ -42,7 +42,7 @@ def index():
     <pre>{
   "session_id": "ABC123",
   "chunk_id": 0,
-  "total_chunks": 20,
+  "total_chunks": 25,
   "audio": [128, 130, 125, ...]
 }</pre>
     <p>Visit <a href='/latest'>/latest</a> for the last full result.</p>
@@ -59,7 +59,7 @@ def predict():
 
         session_id = str(data.get("session_id", "default"))
         chunk_id = int(data.get("chunk_id", 0))
-        total_chunks = int(data.get("total_chunks", 20))
+        total_chunks = int(data.get("total_chunks", 25))
         audio = np.array(data['audio'], dtype=np.uint8).astype(np.float32) / 255.0
 
         with session_locks:
