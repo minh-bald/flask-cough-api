@@ -17,7 +17,7 @@ HTML_TEMPLATE = """
 <html>
 <head><title>Prediction Result</title></head>
 <body>
-  <h2>🤖 Full Session Cough Detection</h2>
+  <h2> Full Session Cough Detection</h2>
   <p><strong>{{ conclusion }}</strong></p>
   <ul>
     {% for label, score in prediction.items() %}
@@ -36,13 +36,13 @@ session_locks = threading.Lock()
 @app.route('/')
 def index():
     return """
-    <h3>✅ Flask API is running.</h3>
+    <h3> Flask API is running.</h3>
     <p>POST JSON with: session_id, chunk_id, total_chunks, and audio array</p>
     <p>Example payload:</p>
     <pre>{
   "session_id": "ABC123",
   "chunk_id": 0,
-  "total_chunks": 25,
+  "total_chunks": 100,
   "audio": [128, 130, 125, ...]
 }</pre>
     <p>Visit <a href='/latest'>/latest</a> for the last full result.</p>
@@ -55,11 +55,11 @@ def predict():
     try:
         data = request.get_json()
         if not data or 'audio' not in data:
-            return "❌ JSON must contain 'audio'", 400
+            return " JSON must contain 'audio'", 400
 
         session_id = str(data.get("session_id", "default"))
         chunk_id = int(data.get("chunk_id", 0))
-        total_chunks = int(data.get("total_chunks", 25))
+        total_chunks = int(data.get("total_chunks", 100))
         audio = np.array(data['audio'], dtype=np.uint8).astype(np.float32) / 255.0
 
         with session_locks:
@@ -86,7 +86,7 @@ def predict():
                 labels = ["Anomaly", "COVID-19", "Non-Cough"]
                 prediction = dict(zip(labels, map(float, output)))
                 top_label = max(prediction, key=prediction.get)
-                conclusion = f"🟢 Likely: {top_label}"
+                conclusion = f" Likely: {top_label}"
 
                 rendered = render_template_string(
                     HTML_TEMPLATE,
@@ -98,10 +98,10 @@ def predict():
                 latest_html = rendered
                 return rendered
 
-        return f"✅ Chunk {chunk_id + 1}/{total_chunks} received for session {session_id}"
+        return f" Chunk {chunk_id + 1}/{total_chunks} received for session {session_id}"
 
     except Exception as e:
-        return f"❌ Error: {e}", 500
+        return f" Error: {e}", 500
 
 @app.route('/latest')
 def latest():
