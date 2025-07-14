@@ -12,7 +12,7 @@ output_details = interpreter.get_output_details()
 expected_length = input_details[0]['shape'][1]
 
 # Labels for 4 classes
-labels = ["Anomaly", "COVID-19", "Non-Cough", "Healthy"]
+labels = ["Anomaly", "COVID-19", "Healthy", "Non-cough"]
 
 # HTML template (no percentage display)
 HTML_TEMPLATE = """
