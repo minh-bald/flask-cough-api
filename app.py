@@ -36,7 +36,7 @@ session_locks = threading.Lock()
 def index():
     return """
     <h3> Flask API is running.</h3>
-    <p>Send audio either as JSON chunks or as a WAV file.</p>
+    <p>Send audio as JSON PCM chunks, multipart WAV file, or raw audio/wav in the body.</p>
     <p>Visit <a href='/latest'>/latest</a> to see the last prediction.</p>
     """
 
@@ -56,19 +56,29 @@ def predict():
             total_chunks = int(data.get("total_chunks", 100))
             audio = np.array(data['audio'], dtype=np.uint8).astype(np.float32) / 255.0
 
-        # Case 2: WAV file upload
+        # Case 2: WAV file upload (multipart/form-data)
         elif "file" in request.files:
             file = request.files["file"]
             wav_bytes = io.BytesIO(file.read())
             audio, samplerate = sf.read(wav_bytes, dtype="float32")
-            if audio.ndim > 1:  # stereo → mono
+            if audio.ndim > 1:
                 audio = np.mean(audio, axis=1)
             session_id = "wav_upload"
             chunk_id, total_chunks = 0, 1
 
-        else:
-            return "❌ Request must contain JSON or WAV file", 400
+        # Case 3: Raw WAV stream (Content-Type: audio/wav)
+        elif request.content_type and "audio/wav" in request.content_type:
+            wav_bytes = io.BytesIO(request.data)
+            audio, samplerate = sf.read(wav_bytes, dtype="float32")
+            if audio.ndim > 1:
+                audio = np.mean(audio, axis=1)
+            session_id = "wav_stream"
+            chunk_id, total_chunks = 0, 1
 
+        else:
+            return "Request must contain JSON, multipart WAV, or raw audio/wav body", 400
+
+        # Store into buffer
         with session_locks:
             if session_id not in session_audio_buffers:
                 session_audio_buffers[session_id] = {
@@ -107,7 +117,7 @@ def predict():
             if sess["received"] >= sess["total"]:
                 del session_audio_buffers[session_id]
 
-        return f"✅ Received data for session {session_id}"
+        return f"✅ Received audio for session {session_id}"
 
     except Exception as e:
         return f"❌ Error: {e}", 500
