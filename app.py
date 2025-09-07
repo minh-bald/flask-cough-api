@@ -117,10 +117,13 @@ def predict():
             if sess["received"] >= sess["total"]:
                 del session_audio_buffers[session_id]
 
-        return f"✅ Received audio for session {session_id}"
+        if conclusion:
+            return f"Received audio for session {session_id} — Prediction: {conclusion}"
+        else:
+            return f"Received audio for session {session_id}, but not enough samples for prediction yet"
 
     except Exception as e:
-        return f"❌ Error: {e}", 500
+        return f"Error: {e}", 500
 
 @app.route('/latest')
 def latest():
