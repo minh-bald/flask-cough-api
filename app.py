@@ -6,7 +6,7 @@ import io
 import soundfile as sf   # for WAV decoding
 
 app = Flask(__name__)
-interpreter = tf.lite.Interpreter(model_path="tflite-model/tflite_learn_6.tflite")
+interpreter = tf.lite.Interpreter(model_path="tflite-model/cough_model.tflite")
 interpreter.allocate_tensors()
 
 input_details = interpreter.get_input_details()
