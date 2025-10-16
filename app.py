@@ -14,7 +14,7 @@ output_details = interpreter.get_output_details()
 expected_length = input_details[0]['shape'][1]
 
 STEP_SIZE = expected_length // 2  
-labels = ["Anomalies", "COVID", "Healthy Cough"]
+labels = ["Healthy Cough", "Abnormal", "COVID"]
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
