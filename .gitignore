@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Logs and cache
+*.log
+*.sqlite3
+*.db
+.DS_Store
+.cache/
+.idea/
+.vscode/
+
+*.egg-info/
+build/
+dist/
