@@ -4,6 +4,7 @@ import tensorflow as tf
 import threading
 import io
 import soundfile as sf   # for WAV decoding
+import os
 
 app = Flask(__name__)
 interpreter = tf.lite.Interpreter(model_path="tflite-model/cough_model.tflite")
@@ -129,5 +130,8 @@ def predict():
 def latest():
     return latest_html
 
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+
